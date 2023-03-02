@@ -1,0 +1,66 @@
+{
+    "dataset": {
+        "dataset_name": "Cifar100",
+        "data_root":""
+    },
+    "backbone": {
+        "name": "ResNet-32"
+    },
+    "loss": {
+        "type": "CrossEntropy"
+    },
+    "train": {
+        "max_epoch" : 230,
+        "batch_size": 64,
+        "cifar_imb_ratio": 0.01,
+        "random_inner": 1.0,
+        "random_outer": 1.0,
+        "distribution": "gaussian",  
+        "div" : 2.0,
+        "disturb" : "head",
+        "sampler" : "Decoup",
+        "mixup": true, 
+        "mixup_alpha": 1.0,
+        "stage": 200,
+        "flat_ratio": 0.2,
+        "noise_ratio": 1.0e-7,
+        "up_limit": 0.3,
+        "optimizer": {
+            "type": "SGD", 
+            "momentum": 0.9,
+            "lr":1e-1,
+            "lr_neck": 1e-1,
+            "lr_hyper": 1e-1,
+            "lr_cls":1e-1,
+            "wc" : 2.0e-4
+        },
+        "lr_scheduler":{
+            "type": "warmup",
+            "lr_step": [160, 180],
+            "lr_factor": 0.1,
+            "warmup_epoch": 5
+        }
+    },
+    "test": {
+        "batch_size": 512,
+        "exp_id": "",
+        "error": 1.0e-2,
+        "lamda": 100
+    },
+    "test_open":{
+        "open_threshold": 0.1,
+        "metric": "hybrid"
+    },
+    "setting": {
+        "type": "LT Classification", 
+        "num_class": 100
+    },
+    "adver_reg": 1,
+    "seed": 1,
+    "gpu_id": "0,1",
+    "use_gpu": true,
+    "valid_step": 1,
+    "save_dir" : "",
+    "variance" : 1e-3,
+    "debug" : false
+}
