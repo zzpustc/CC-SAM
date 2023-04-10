@@ -1,6 +1,5 @@
 # Class-Conditional Sharpness Aware Minimization for Deep Long-Tailed Learning
-This is the source code for our paper based on Pytorch. 
-This version is a demo of how to use CC-SAM.
+This is the implementation of our CVPR'23 paper "Class-Conditional Sharpness-Aware Minimization for Deep Long-Tailed Recognition". In this paper, we propose a new variant of SAM to better adapt to deep long-tailed recognition.
 
 ## Installation
 
@@ -11,15 +10,29 @@ This version is a demo of how to use CC-SAM.
 * opencv 4.2
 * numpy 1.19.5
 
-
-## CIFAR-10-LT
+## Training
+### CIFAR-10-LT
 Specify the data path ("data_root") in configs/Cifar10.json. Then running the following commend:
 ```bash
-$ python train_cifar.py --config ./configs/Cifar10.json
+$ python3 train_cifar.py --config ./configs/Cifar10.json
 ```
 
-## CIFAR-100-LT
+### CIFAR-100-LT
 Specify the data path ("data_root") in configs/Cifar100.json. Then running the following commend:
 ```bash
-$ python train_cifar.py --config ./configs/Cifar100.json
+$ python3 train_cifar.py --config ./configs/Cifar100.json
 ```
+
+## Citation
+```
+@inproceedings{zhou2023ccsam,
+author = {Zhipeng Zhou, Lanqing Li, Peilin Zhao, Pheng-Ann Heng, Wei Gong},
+title = {Class-Conditional Sharpness Aware Minimization for Deep Long-Tailed Learning},
+booktitle = {Proceedings of the 34th IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+year = {2023}
+}
+```
+
+## Correspondence
+If you have any further questions, please feel free to contact Zhipeng Zhou by zzp1994@mail.ustc.edu.cn
+
