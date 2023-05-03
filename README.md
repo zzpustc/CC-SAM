@@ -26,7 +26,7 @@ $ python3 train_cifar.py --config ./configs/Cifar100.json
 ## Citation
 ```
 @inproceedings{zhou2023ccsam,
-author = {Zhipeng Zhou, Lanqing Li, Peilin Zhao, Pheng-Ann Heng, Wei Gong},
+author = {Zhou, Zhipeng and Li, Lanqing and Zhao, Peilin and Heng, Pheng-Ann and Gong, Wei},
 title = {Class-Conditional Sharpness Aware Minimization for Deep Long-Tailed Learning},
 booktitle = {Proceedings of the 34th IEEE/CVF Conference on Computer Vision and Pattern Recognition},
 year = {2023}
