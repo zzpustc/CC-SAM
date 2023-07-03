@@ -21,6 +21,7 @@ from datasets.ClassPrioritySampler import ClassPrioritySampler
 
 from utils.lr_scheduler import adjust_learning_rate
 from utils.loss import mixup_criterion
+from utils.pytorch import grad_norm
 
 from utils.utils import (
     create_logger, 
@@ -150,19 +151,21 @@ def train(epoch, train_loader, model, optimizer, logger, class_ratio, class_weig
 
             del f_param_grads, f_param_grads_real
     
+        # calculate gradient norm here
+        device = disturb_params[0].device
+        param_norm = grad_norm(disturb_params, device) + 1e-12
 
         for y_tmp in np.unique(y_in): 
             idx = np.where(y_in == y_tmp)
             
-            # ----- NOISE CLASSIFIER -----
+            # noise classifier
             param_c = 0
             for param in disturb_params:
                 grad_c = grad_list[str(y_tmp)][param_c]  
                 grad_c_norm = torch.norm(grad_c)
-                param_norm = torch.norm(param)
-                numerator = cfg['train']['noise_ratio'] * torch.sqrt(param_norm) / torch.sqrt(grad_c_norm) / np.sqrt(2) / np.sqrt(np.sqrt(class_ratio[y_tmp]-1)) / np.sqrt(np.sqrt(params_num))
+                rho_c = cfg['train']['noise_ratio'] * torch.sqrt(param_norm) / torch.sqrt(grad_c_norm) / np.sqrt(2) / np.sqrt(np.sqrt(class_ratio[y_tmp]-1)) / np.sqrt(np.sqrt(params_num))
                 denominator = grad_c / grad_c_norm
-                noise = numerator * 1.0 * denominator * np.sqrt(params_num)
+                noise = rho_c * 1.0 * denominator * np.sqrt(params_num)
                 param.data = param.data + noise
                 param_c += 1
                      
@@ -172,7 +175,7 @@ def train(epoch, train_loader, model, optimizer, logger, class_ratio, class_weig
             loss_tmp = F.cross_entropy(o_tmp, y[idx], reduction = 'none')
             loss_list.extend(loss_tmp)             
                     
-            # ----- RESUME WEIGHTS -----
+            # ----- resume weights -----
             for i in range(len(disturb_params)):
                 disturb_params[i].data = origin_params[i].data.clone()
 
@@ -254,7 +257,7 @@ def val(epoch, val_loader, model, logger, train_dataset):
 if __name__ == '__main__':
 
 	# ----- LOAD PARAM -----
-    path = "./configs/Cifar10.json"
+    path = "./configs/Cifar10.json" 
     # path = "./configs/Cifar100.json"
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -350,11 +353,14 @@ if __name__ == '__main__':
 
         # ----- FOR STAGE-2 -----
         else:
-            train_loader = CS_loader 
-            freeze_backbone(model)
             if epoch == cfg['train']['stage']:
                 optimizer = lr_reset(cfg, model)   # RESET LR
+                weights_name = cfg['save_dir'] + str(cfg['train']['cifar_imb_ratio']) + '_flat_ratio_' + str(cfg['train']['flat_ratio']) + '_noise_' + str(cfg['train']['noise_ratio']) + '_best_model.pth'
+                state_dict = torch.load(weights_name)
+                model.load_state_dict(state_dict)
 
+            train_loader = CS_loader 
+            freeze_backbone(model)
             adjust_learning_rate(optimizer, epoch - cfg['train']['stage'], cfg)
             model = train_sample(epoch, train_loader, model, optimizer, logger, class_weights)
         
@@ -370,6 +376,5 @@ if __name__ == '__main__':
             print('Find a better model and save it!')
             logger.info('Find a better model and save it!')       
 
-            weights_name = cfg['save_dir'] + cfg['backbone']['name']  + '_best_model.pth'
+            weights_name = cfg['save_dir'] + str(cfg['train']['cifar_imb_ratio']) + '_flat_ratio_' + str(cfg['train']['flat_ratio']) + '_noise_' + str(cfg['train']['noise_ratio']) + '_best_model.pth'
             torch.save(model.state_dict(), weights_name)
-        
