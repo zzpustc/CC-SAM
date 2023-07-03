@@ -23,6 +23,19 @@ Specify the data path ("data_root") in configs/Cifar100.json. Then running the f
 $ python3 train_cifar.py --config ./configs/Cifar100.json
 ```
 
+### Stronger Augmentation Usage
+Uncomment the CIFAR10Policy and Cutout in datasets/Cifar.py:
+```bash
+self.transform = transforms.Compose([
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                CIFAR10Policy(),    # add AutoAug
+                transforms.ToTensor(),
+                Cutout(n_holes=1, length=16),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+            ])
+```
+
 ## Citation
 ```
 @inproceedings{zhou2023ccsam,
