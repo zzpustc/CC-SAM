@@ -12,7 +12,7 @@
     "train": {
         "max_epoch" : 230,
         "batch_size": 64,
-        "cifar_imb_ratio": 0.01,
+        "cifar_imb_ratio": 0.005,
         "random_inner": 1.0,
         "random_outer": 1.0,
         "distribution": "gaussian",  
@@ -22,8 +22,8 @@
         "mixup": true, 
         "mixup_alpha": 1.0,
         "stage": 200,
-        "flat_ratio": 0.2,
-        "noise_ratio": 1.0e-7,
+        "flat_ratio": 0.5,
+        "noise_ratio": 1.0e-6,
         "up_limit": 0.3,
         "optimizer": {
             "type": "SGD", 
@@ -43,20 +43,21 @@
     },
     "test": {
         "batch_size": 512,
-        "exp_id": "",
+        "exp_id": "Places_LT_2022_7_7",
         "error": 1.0e-2,
         "lamda": 100
     },
     "test_open":{
         "open_threshold": 0.1,
-        "metric": "hybrid"
+        "metric": "hybrid",
+        "resume" : ""
     },
     "setting": {
-        "type": "LT Classification", 
+        "type": "LT Classification Stage 2", 
         "num_class": 100
     },
     "adver_reg": 1,
-    "seed": 1,
+    "seed": 42,
     "gpu_id": "0,1",
     "use_gpu": true,
     "valid_step": 1,
