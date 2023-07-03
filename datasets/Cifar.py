@@ -3,15 +3,16 @@ import torchvision.transforms as transforms
 import numpy as np
 from PIL import Image
 import random
+from datasets.autoaugment import CIFAR10Policy, Cutout
 
 class IMBALANCECIFAR10(torchvision.datasets.CIFAR10):
     cls_num = 10
 
-    def __init__(self, phase, imbalance_ratio, root = '', imb_type='exp',
+    def __init__(self, phase, imbalance_ratio, root = '/apdcephfs/share_1364275/zhipengzhou/CIFAR100/', imb_type='exp',
                  test_imb_ratio=None, reverse=False):
         train = True if phase == "train" else False
         super(IMBALANCECIFAR10, self).__init__(root, train, transform=None, target_transform=None, download=True)
-        self.train = train
+        self.train = train 
         if self.train:
             self.img_num_list = self.get_img_num_per_cls(self.cls_num, imb_type, imbalance_ratio,
                                                          reverse=reverse)
@@ -19,8 +20,9 @@ class IMBALANCECIFAR10(torchvision.datasets.CIFAR10):
             self.transform = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
                 transforms.RandomHorizontalFlip(),
-                #transforms.Resize(224),
+             #   CIFAR10Policy(),    # add AutoAug
                 transforms.ToTensor(),
+             #   Cutout(n_holes=1, length=16),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
             ])
         else:
