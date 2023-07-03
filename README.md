@@ -1,5 +1,8 @@
 # Class-Conditional Sharpness Aware Minimization for Deep Long-Tailed Recognition
 This is the implementation of our CVPR'23 paper "Class-Conditional Sharpness-Aware Minimization for Deep Long-Tailed Recognition". In this paper, we propose a new variant of SAM to better adapt to the scenario of deep long-tailed recognition.
+<p align="center">
+<img src="figures/overview.png" alt="wild_settings" width="100%" align=center />
+</p>
 
 ## Installation
 
