@@ -16,6 +16,17 @@ GPU wrappers
 _use_gpu = False
 device = None
 
+def grad_norm(param_groups, device):
+    shared_device = device  # put everything on the same device, in case of model parallelism
+    p_norm = torch.norm(
+        torch.stack([
+            p.norm(p=2).to(shared_device) for p in param_groups
+        ]
+        ),
+        p=2
+    )
+    return p_norm 
+
 def scatter(inputs, target_gpus, chunk_sizes, dim=0):
     r"""
     Slices tensors into approximately equal chunks and
