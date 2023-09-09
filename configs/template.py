@@ -14,6 +14,9 @@ config=dict(
         pretrain=False,
         hidden_dim = 512
     ),
+    loss=dict(
+        type ='CrossEntropy',
+    ),
     neck=dict(
         type='Concat' # choose from ['GAP', 'Identity', 'SiLU', 'Concat']
     ),
