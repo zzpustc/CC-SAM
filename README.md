@@ -27,7 +27,7 @@ $ python3 train_cifar.py --config ./configs/Cifar100.json
 ```
 
 ### Stronger Augmentation Usage
-Uncomment the CIFAR10Policy and Cutout in datasets/Cifar.py:
+Uncomment the CIFAR10Policy and Cutout in datasets/Cifar.py, and change the "mixup" to false in Cifar10.json/Cifar100.json:
 ```bash
 self.transform = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
